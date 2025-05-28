@@ -1,0 +1,6 @@
+@UrlShortenerBack_HostAddress = http://localhost:5122
+
+GET {{UrlShortenerBack_HostAddress}}/api/health/
+Accept: application/json
+
+###
