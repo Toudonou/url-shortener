@@ -23,30 +23,31 @@ namespace UrlShortenerBack.Controllers
         }
 
         [HttpGet]
-        [Route("{shortUrl}")]
+        [Route("r/{shortUrl}")]
         public IActionResult RedirectUrl(string shortUrl)
         {
             if (shortUrl.Length != 8)
             {
-                logger.LogError("The short url must be 8 characters long");
-                return BadRequest("The short url must be 8 characters long");
+                logger.LogError("The short url code must be 8 characters long");
+                return BadRequest("The short url code must be 8 characters long");
             }
 
             var url = urlService.GetUrl(shortUrl);
-            if (url == null)
+            if (url.Result == null)
             {
                 logger.LogError("The short url is not found");
-                return BadRequest("The short url is not found");
+                return NotFound("The short url is not found");
             }
+
             urlService.UpdateUrlCount(shortUrl);
-            return Redirect(url.LongUrl);
+            return Redirect(url.Result.LongUrl);
         }
 
         [HttpGet]
         [Route("urls/")]
-        public ActionResult<IEnumerable<Url>> GetAllUrls()
+        public Task<IEnumerable<Url?>> GetAllUrls()
         {
-            return new ActionResult<IEnumerable<Url>>(urlService.GetAllUrls()!);
+            return urlService.GetAllUrls();
         }
 
         [HttpGet]

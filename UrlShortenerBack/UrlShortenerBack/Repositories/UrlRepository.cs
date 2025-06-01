@@ -1,35 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using UrlShortenerBack.DbContexts;
 using UrlShortenerBack.Interfaces;
 using UrlShortenerBack.Models;
 
 namespace UrlShortenerBack.Repositories
 {
-    public class UrlRepository : IUrlRepository
+    public class UrlRepository(UrlContext urlContext) : IUrlRepository
     {
-        private static readonly List<Url?> Urls = [];
-
-        public IEnumerable<Url?> GetAllUrls()
+        public async Task<IEnumerable<Url?>> GetAllUrls()
         {
-            return Urls;
+            return await urlContext.Urls.ToListAsync();
         }
 
-        public Url? GetUrlByShort(string shortUrl)
+        public Task<Url?> GetUrlByShort(string shortUrl)
         {
-            return Urls.FirstOrDefault(url => url?.ShortUrl == shortUrl);
+            return urlContext.Urls.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
         }
 
-        public Url? GetUrlByLong(string longUrl)
+        public Task<Url?> GetUrlByLong(string longUrl)
         {
-            return Urls.FirstOrDefault(url => url?.LongUrl == longUrl);
+            return urlContext.Urls.FirstOrDefaultAsync(x => x.LongUrl == longUrl);
         }
 
         public void UpdateUrlCount(string shortUrl)
         {
-            GetUrlByShort(shortUrl)!.UsedCount++;
+            var url = GetUrlByShort(shortUrl).Result;
+            if (url == null) return;
+            url.UsedCount++;
+            urlContext.SaveChangesAsync();
         }
 
         public void AddUrl(Url url)
         {
-            Urls.Add(url);
+            urlContext.Urls.Add(url);
+            urlContext.SaveChangesAsync();
         }
     }
 }

@@ -5,19 +5,22 @@ using UrlShortenerBack.Models;
 
 namespace UrlShortenerBack.Services
 {
-    public class UrlService(ILogger<UrlService> logger, IUrlRepository urlRepository, IMapper mapper) : IUrlService
+    public class UrlService(ILogger<UrlService> logger, IUrlRepository urlRepository, IMapper mapper)
+        : IUrlService
     {
-        private static string base62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        private static int[] counters = [0, 0, 0, 0, 0, 0, 0, 0];
+        private static readonly char[] Base62 =
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+        private static readonly Random Random = new();
 
         public CreatedUrl CreateUrl(string longUrl)
         {
-            var newUrl = urlRepository.GetUrlByLong(longUrl);
+            var newUrl = urlRepository.GetUrlByLong(longUrl).Result;
             if (newUrl == null)
             {
                 newUrl = new Url
                 {
-                    ShortUrl = GenerateShortUrl(longUrl),
+                    ShortUrl = GenerateShortUrl(),
                     LongUrl = longUrl,
                     CreatedAt = DateTime.Now,
                     UsedCount = 0
@@ -28,12 +31,12 @@ namespace UrlShortenerBack.Services
             return mapper.Map<CreatedUrl>(newUrl);
         }
 
-        public Url? GetUrl(string shortUrl)
+        public Task<Url?> GetUrl(string shortUrl)
         {
             return urlRepository.GetUrlByShort(shortUrl);
         }
 
-        public IEnumerable<Url?> GetAllUrls()
+        public Task<IEnumerable<Url?>> GetAllUrls()
         {
             return urlRepository.GetAllUrls();
         }
@@ -43,18 +46,23 @@ namespace UrlShortenerBack.Services
             urlRepository.UpdateUrlCount(shortUrl);
         }
 
-        private static string GenerateShortUrl(string longUrl)
+        private string GenerateShortUrl()
         {
-            for (ushort i = 0; i < 7; i++)
+            var shortUrl = string.Empty;
+
+            Random.Shared.Shuffle(Base62);
+            while (true)
             {
-                counters[i] = (counters[i + 1] / base62.Length) % base62.Length;
+                while (shortUrl.Length < 8)
+                {
+                    var index = Random.Next(Base62.Length);
+                    shortUrl += Base62[index];
+                }
+
+                if (GetUrl(shortUrl).Result == null) break;
             }
 
-            counters[7]++;
-
-            return base62[counters[0]].ToString() + base62[counters[1]] +
-                   base62[counters[2]] + base62[counters[3]] + base62[counters[4]] +
-                   base62[counters[5]] + base62[counters[6]] + base62[counters[7]];
+            return shortUrl;
         }
     }
 }
