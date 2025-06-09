@@ -1,4 +1,5 @@
 .env
 UrlShortenerBack/.idea/**
+UrlShortenerFront/.idea/**
 UrlShortenerBack/UrlShortenerBack/bin/**
 UrlShortenerBack/UrlShortenerBack/obj/**

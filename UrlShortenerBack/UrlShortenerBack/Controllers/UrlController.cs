@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using UrlShortenerBack.Dtos;
 using UrlShortenerBack.Interfaces;
@@ -5,21 +6,25 @@ using UrlShortenerBack.Models;
 
 namespace UrlShortenerBack.Controllers
 {
-    [Route("api/")]
     public class UrlController(ILogger<UrlController> logger, IUrlService urlService) : ControllerBase
     {
+        public class UrlRequest
+        {
+            public string LongUrl { get; set; }
+        }
+        
         [HttpPost]
         [Route("shorten/")]
-        public ActionResult<CreatedUrl> Shorten([FromBody] string longUrl)
+        public ActionResult<CreatedUrl> Shorten([FromBody] UrlRequest request)
         {
-            if (!longUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) &&
-                !longUrl.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
+            if (!request.LongUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) &&
+                !request.LongUrl.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
             {
                 logger.LogError("Error: The long URL must start with https:// or http://");
                 return BadRequest("The long URL must start with https:// or http://");
             }
 
-            return Ok(urlService.CreateUrl(longUrl));
+            return Ok(urlService.CreateUrl(request.LongUrl));
         }
 
         [HttpGet]

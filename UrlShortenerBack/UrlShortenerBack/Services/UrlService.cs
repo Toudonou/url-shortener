@@ -1,11 +1,16 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using UrlShortenerBack.Dtos;
 using UrlShortenerBack.Interfaces;
 using UrlShortenerBack.Models;
 
 namespace UrlShortenerBack.Services
 {
-    public class UrlService(ILogger<UrlService> logger, IUrlRepository urlRepository, IMapper mapper)
+    public class UrlService(
+        ILogger<UrlService> logger,
+        IHttpContextAccessor httpContextAccessor,
+        IUrlRepository urlRepository,
+        IMapper mapper)
         : IUrlService
     {
         private static readonly char[] Base62 =
@@ -20,11 +25,16 @@ namespace UrlShortenerBack.Services
             {
                 newUrl = new Url
                 {
-                    ShortUrl = GenerateShortUrl(),
+                    Code = GenerateShortUrlCode(),
+                    ShortUrl = "",
                     LongUrl = longUrl,
                     CreatedAt = DateTime.Now,
                     UsedCount = 0
                 };
+
+                var request = httpContextAccessor.HttpContext?.Request!;
+                newUrl.ShortUrl = $"{request.Scheme}://{request.Host}/r/" + newUrl.Code; 
+
                 urlRepository.AddUrl(newUrl);
             }
 
@@ -46,7 +56,7 @@ namespace UrlShortenerBack.Services
             urlRepository.UpdateUrlCount(shortUrl);
         }
 
-        private string GenerateShortUrl()
+        private string GenerateShortUrlCode()
         {
             var shortUrl = string.Empty;
 

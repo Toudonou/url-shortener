@@ -6,11 +6,15 @@ namespace UrlShortenerBack.Models
     {
         [Key]
         [Required]
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "ShortUrl must be exactly 8 characters.")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "The code must be exactly 8 characters.")]
+        public required string Code { set; get; }
+        
+        [Required]
+        [RegularExpression(@"^https?://", ErrorMessage = "The ShortUrl must start with http:// or https://")]
         public required string ShortUrl { set; get; }
 
         [Required]
-        [RegularExpression(@"^https?://", ErrorMessage = "URL must start with http:// or https://")]
+        [RegularExpression(@"^https?://", ErrorMessage = "The LongUrl must start with http:// or https://")]
         public required string LongUrl { set; get; }
 
         [Required] public required DateTime CreatedAt { set; get; }

@@ -19,10 +19,21 @@ namespace UrlShortenerBack
             builder.Services.AddSwaggerGen();
             builder.Services.AddLogging();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddDbContext<UrlContext>(options =>
             {
                 options.UseNpgsql(Environment.GetEnvironmentVariable("URL_DATABASE_SETTINGS"));
             });
+            
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost",
+                    policy => policy
+                        .AllowAnyOrigin() // Allows ALL origins (any domain, port, etc.)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
 
             builder.Services.AddScoped<IUrlRepository, UrlRepository>();
             builder.Services.AddScoped<IUrlService, UrlService>();
@@ -42,6 +53,7 @@ namespace UrlShortenerBack
 
             app.UseHttpsRedirection();
             app.MapControllers();
+            app.UseCors("AllowLocalhost");
             
             app.Run();
         }

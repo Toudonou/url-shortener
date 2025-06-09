@@ -14,7 +14,7 @@ namespace UrlShortenerBack.Repositories
 
         public Task<Url?> GetUrlByShort(string shortUrl)
         {
-            return urlContext.Urls.FirstOrDefaultAsync(x => x.ShortUrl == shortUrl);
+            return urlContext.Urls.FirstOrDefaultAsync(x => x.Code == shortUrl);
         }
 
         public Task<Url?> GetUrlByLong(string longUrl)
