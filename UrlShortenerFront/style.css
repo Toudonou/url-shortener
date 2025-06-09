@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    position: relative;
+    background-color: #fbeee7;
+    font-family: Outfit, serif;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100dvh;
+}
+
+#main-container {
+    display: block;
+    padding-top: 70px;
+}
+
+#header-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 70px;
+}
+
+#simple-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 50px;
+}
+
+.arrow {
+    height: 2em;
+    width: auto;
+    vertical-align: middle;
+}
+
+#url-input-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#url-input {
+    font-family: Outfit, serif;
+    font-size: 1.3rem;
+    padding: 20px;
+    margin-right: 20px;
+    border-radius: 15px;
+    border: 3px solid black;
+    min-width: 500px;
+    outline: none;
+}
+
+#url-input-button {
+    font-family: Outfit, serif;
+    font-size: 1.8rem;
+    padding: 10px 20px;
+    width: 200px;
+    height: 70px;
+    border-radius: 15px;
+    border: 3px solid black;
+    background-color: #ff7b9c;
+    cursor: pointer;
+    box-shadow: 7px 7px 0 black;
+    transition: background-color 0.3s ease;
+}
+
+#url-input-button:active, #copy-button:active {
+    background-color: #e46f8c;
+}
+
+#popup-container {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: start;
+    padding-top: 150px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#popup-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    max-width: 600px;
+    width: 100%;
+    min-height: 300px;
+}
+
+#popup-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 75%;
+}
+
+#popup-header h1 {
+    font-family: Outfit, serif;
+    font-weight: bold;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+#close-popup {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#close-popup:hover {
+    border: none;
+    background-color: #ff7b9c;
+    border-radius: 50px;
+}
+
+#close-popup:active {
+    background-color: #e46f8c;
+    transform: scale(0.98);
+}
+
+#popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#text2 {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+#shortened-url {
+    max-width: 450px;
+    padding: 20px 50px;
+    width: 100%;
+    border-radius: 15px;
+    border: solid black;
+    background-color: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+#copy-button {
+    font-family: Outfit, serif;
+    font-size: 1.8rem;
+    padding: 10px 20px;
+    height: 70px;
+    margin-right: 20px;
+    border-radius: 15px;
+    border: 3px solid black;
+    background-color: #ff7b9c;
+    cursor: pointer;
+    box-shadow: 7px 7px 0 black;
+    transition: background-color 0.3s ease;
+}
